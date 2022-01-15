@@ -1,47 +1,58 @@
 extends KinematicBody2D
 
-enum STATE { MOVE, PUSH }
 const speed = 350
-const speed_push = 100
-const accel = 0.09
-const deaccel = 0.2
-const push_crate = Vector2(20, 0)
+const acceleration = 0.09
+const friction = 0.2
+const mass = 20
+const jump_height = 600
+
+const push_crate_speed = 50
+const push_ship_speed = 50
 
 var velocity: Vector2
-var gravity: Vector2 = ProjectSettings.get_setting("physics/2d/default_gravity_vector")
-var state = STATE.MOVE
+var gravity : int = ProjectSettings.get_setting("physics/2d/default_gravity")
 var collision: KinematicCollision2D
 
-func _process(delta):
+func _physics_process(delta):
 	# détermine la direction
+	var movement = get_input()
+
+	# calcul du mouvement (direction, gravité, etc)
+	calculate_velocity(movement, delta)
+
+	# déplacement
+	velocity = move_and_slide(velocity, Vector2.UP, true, 4, 0.785398, false)
+	for i in get_slide_count():
+		var collision = get_slide_collision(i)
+		if collision.collider.name == "Ship":
+			move_ship(collision.collider, collision.travel.normalized())
+
+func get_input():
 	var movement = Vector2.ZERO
 	if Input.is_action_pressed("move_right"):
-		movement.x = +1
-	elif Input.is_action_pressed("move_left"):
+		movement.x = 1
+	if Input.is_action_pressed("move_left"):
 		movement.x = -1
+	if Input.is_action_just_pressed("jump") and is_on_floor():
+		velocity.y = -jump_height
 	
-	# accélération/déaccélération
-	if state == STATE.MOVE:
-		move(movement)
-	elif state == STATE.PUSH:
-		push(movement)
+	return movement
 	
-	# collision
-	collision = move_and_collide(velocity * delta, false)
-	if collision and collision.collider is RigidBody2D:
-		state = STATE.PUSH
-		collision.collider.apply_central_impulse(push_crate)
-	else:
-		state = STATE.MOVE
-
-func move(movement: Vector2):
+func calculate_velocity(movement: Vector2, delta):
+	# déplacement
 	if movement.length() > 0:
-		velocity = velocity.linear_interpolate(movement * speed, accel)
+		velocity.x = lerp(velocity.x, movement.x * speed, acceleration)
 	else:
-		velocity = velocity.linear_interpolate(Vector2.ZERO, deaccel)
+		velocity.x = lerp(velocity.x, 0, friction)
+	
+	# gravité
+	velocity.y += gravity * mass * delta
 
-func push(movement: Vector2):
-	if movement.length() > 0:
-		velocity = velocity.linear_interpolate(movement * speed_push, accel)
-	else:
-		velocity = velocity.linear_interpolate(Vector2.ZERO, deaccel)
+func move_ship(ship: RigidBody2D, direction: Vector2):
+	# déplace le bateau horizontalement
+	var velocity = direction * push_ship_speed
+	velocity.y = 0
+	print(velocity)
+#	direction.y = 0
+	if is_on_wall():
+		ship.apply_central_impulse(velocity)
