@@ -6,11 +6,9 @@
 extents = Vector2( 2.54506, 155.957 )
 
 [node name="Ship" type="RigidBody2D"]
+position = Vector2( 522, 293 )
 mode = 2
 gravity_scale = 10.0
-__meta__ = {
-"_edit_group_": true
-}
 
 [node name="Sprite" type="Sprite" parent="."]
 texture = ExtResource( 1 )
@@ -23,3 +21,6 @@ position = Vector2( -6.68431, 0.203691 )
 rotation = -0.100351
 shape = SubResource( 1 )
 disabled = true
+
+[node name="CameraPivot" type="Node2D" parent="."]
+position = Vector2( -15, -86 )

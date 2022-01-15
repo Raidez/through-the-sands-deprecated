@@ -26,6 +26,8 @@ func _physics_process(delta):
 		var collision = get_slide_collision(i)
 		if collision.collider.name == "Ship":
 			move_ship(collision.collider, collision.travel.normalized())
+		if collision.collider.is_in_group("crate"):
+			move_crate(collision.collider, collision.travel.normalized())
 
 func get_input():
 	var movement = Vector2.ZERO
@@ -50,9 +52,12 @@ func calculate_velocity(movement: Vector2, delta):
 
 func move_ship(ship: RigidBody2D, direction: Vector2):
 	# déplace le bateau horizontalement
-	var velocity = direction * push_ship_speed
-	velocity.y = 0
-	print(velocity)
-#	direction.y = 0
+	direction.y = 0
 	if is_on_wall():
-		ship.apply_central_impulse(velocity)
+		ship.apply_central_impulse(direction * push_ship_speed)
+
+func move_crate(crate: RigidBody2D, direction: Vector2):
+	# déplace la caisse horizontalement
+	direction.y = 0
+	if is_on_wall():
+		crate.apply_central_impulse(direction * push_crate_speed)

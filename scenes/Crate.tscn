@@ -5,7 +5,7 @@
 [sub_resource type="RectangleShape2D" id=1]
 extents = Vector2( 32, 32 )
 
-[node name="Crate" type="RigidBody2D"]
+[node name="Crate" type="RigidBody2D" groups=["crate"]]
 position = Vector2( 436, 227 )
 mode = 2
 gravity_scale = 10.0
