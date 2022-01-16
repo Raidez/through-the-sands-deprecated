@@ -1,5 +1,7 @@
 extends KinematicBody2D
 
+class_name Player
+
 const speed = 350
 const acceleration = 0.09
 const friction = 0.2
@@ -21,13 +23,13 @@ func _physics_process(delta):
 	calculate_velocity(movement, delta)
 
 	# déplacement
-	velocity = move_and_slide(velocity, Vector2.UP, true, 4, 0.785398, false)
+	velocity = move_and_slide(velocity, Vector2.UP, true, 4, PI/4, false)
 	for i in get_slide_count():
 		var collision = get_slide_collision(i)
-		if collision.collider.name == "Ship":
-			move_ship(collision.collider, collision.travel.normalized())
+		if collision.collider is Ship:
+			move_ship(collision.collider, -collision.normal)
 		if collision.collider.is_in_group("crate"):
-			move_crate(collision.collider, collision.travel.normalized())
+			move_crate(collision.collider, -collision.normal)
 
 func get_input():
 	var movement = Vector2.ZERO
@@ -50,14 +52,12 @@ func calculate_velocity(movement: Vector2, delta):
 	# gravité
 	velocity.y += gravity * mass * delta
 
-func move_ship(ship: RigidBody2D, direction: Vector2):
+func move_ship(ship: Ship, direction: Vector2):
 	# déplace le bateau horizontalement
 	direction.y = 0
-	if is_on_wall():
-		ship.apply_central_impulse(direction * push_ship_speed)
+	ship.push(direction * push_ship_speed)
 
 func move_crate(crate: RigidBody2D, direction: Vector2):
 	# déplace la caisse horizontalement
 	direction.y = 0
-	if is_on_wall():
-		crate.apply_central_impulse(direction * push_crate_speed)
+	crate.apply_central_impulse(direction * push_crate_speed)

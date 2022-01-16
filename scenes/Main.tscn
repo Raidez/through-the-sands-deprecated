@@ -4,10 +4,12 @@
 [ext_resource path="res://assets/background.png" type="Texture" id=2]
 [ext_resource path="res://scenes/Ship.tscn" type="PackedScene" id=3]
 [ext_resource path="res://scripts/Camera2D.gd" type="Script" id=4]
-[ext_resource path="res://scenes/Crate.tscn" type="PackedScene" id=5]
 
 [sub_resource type="RectangleShape2D" id=1]
 extents = Vector2( 552.5, 15 )
+
+[sub_resource type="RectangleShape2D" id=2]
+extents = Vector2( 310.486, 10 )
 
 [node name="Main" type="Node2D"]
 
@@ -36,18 +38,22 @@ __meta__ = {
 position = Vector2( 108, 557 )
 
 [node name="Ship" parent="." instance=ExtResource( 3 )]
-position = Vector2( 663, 422 )
+position = Vector2( 416, 170 )
 
 [node name="Camera2D" type="Camera2D" parent="."]
 visible = false
-current = true
 zoom = Vector2( 0.6, 0.6 )
 script = ExtResource( 4 )
 player_path = NodePath("../Player")
 ship_path = NodePath("../Ship")
 
-[node name="Crate" parent="." instance=ExtResource( 5 )]
-position = Vector2( 601, 182 )
+[node name="StaticBody2D2" type="StaticBody2D" parent="."]
+position = Vector2( 294, 339 )
+rotation = 0.32847
+__meta__ = {
+"_edit_group_": true
+}
 
-[node name="Crate2" parent="." instance=ExtResource( 5 )]
-position = Vector2( 287, 204 )
+[node name="CollisionShape2D" type="CollisionShape2D" parent="StaticBody2D2"]
+position = Vector2( 300.486, 4.57764e-05 )
+shape = SubResource( 2 )
