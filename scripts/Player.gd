@@ -5,15 +5,13 @@ class_name Player
 const speed = 350
 const acceleration = 0.09
 const friction = 0.2
-const mass = 20
+const gravity_scale = 20
 const jump_height = 600
-
 const push_crate_speed = 50
 const push_ship_speed = 50
 
 var velocity: Vector2
 var gravity : int = ProjectSettings.get_setting("physics/2d/default_gravity")
-var collision: KinematicCollision2D
 
 func _physics_process(delta):
 	# détermine la direction
@@ -24,6 +22,8 @@ func _physics_process(delta):
 
 	# déplacement
 	velocity = move_and_slide(velocity, Vector2.UP, true, 4, PI/4, false)
+	
+	# gestion des collisions
 	for i in get_slide_count():
 		var collision = get_slide_collision(i)
 		if collision.collider is Ship:
@@ -50,7 +50,7 @@ func calculate_velocity(movement: Vector2, delta):
 		velocity.x = lerp(velocity.x, 0, friction)
 	
 	# gravité
-	velocity.y += gravity * mass * delta
+	velocity.y += gravity * gravity_scale * delta
 
 func move_ship(ship: Ship, direction: Vector2):
 	# déplace le bateau horizontalement

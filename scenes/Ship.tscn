@@ -30,7 +30,7 @@ position = Vector2( -15, -86 )
 [node name="ShipCollision" type="CollisionPolygon2D" parent="DontPushArea"]
 position = Vector2( -1, 2 )
 scale = Vector2( 0.976839, 0.976839 )
-polygon = PoolVector2Array( -135, 116, -133, 129, -126, 140, -114, 152, -94, 157, 28, 159, 75.7546, 113.632 )
+polygon = PoolVector2Array( -134.106, 115.679, -137.177, 116.703, -133, 129, -126, 140, -114, 152, -94, 157, 28, 159, 80.8731, 111.584 )
 
 [connection signal="body_entered" from="DontPushArea" to="." method="_on_DontPushArea_body_entered"]
 [connection signal="body_exited" from="DontPushArea" to="." method="_on_DontPushArea_body_exited"]
